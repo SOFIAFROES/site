@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sofia Fröes – Acting as Transformation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sand:  #F0E9DF;
+      --sand2: #E5DDD2;
+      --sand3: #D8CFC4;
+      --ink:   #1C1A16;
+      --ink2:  #2E2B24;
+      --stone: #6A6258;
+      --ember: #7A2C12;
+      --ember2:#A83C1C;
+      --warm:  #C8A882;
+      --line:  rgba(14,13,11,0.09);
+      --serif: "Cormorant Garamond", serif;
+      --sans:  "DM Sans", sans-serif;
+    }
+
+    html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+
+    body {
+      background: var(--sand);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.8;
+      font-size: 15px;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9000; opacity: .12; mix-blend-mode: multiply;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+      padding: 22px 6vw;
+      display: flex; justify-content: space-between; align-items: center;
+      transition: background .4s, border-bottom .4s;
+    }
+    nav.scrolled {
+      background: rgba(240,233,223,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: .5px solid var(--line);
+    }
+    .nav-logo {
+      font-family: var(--serif); font-size: 18px; font-weight: 400;
+      letter-spacing: .04em; color: var(--ink); text-decoration: none;
+    }
+    .nav-logo .o { color: var(--ember2); }
+    .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+    .nav-links a {
+      font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+      color: rgba(28,26,22,.52); text-decoration: none; transition: color .2s;
+    }
+    nav.scrolled .nav-links a { color: var(--stone); }
+    .nav-links a:hover { color: var(--ink) !important; }
+    .nav-enter {
+      font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--ember2); text-decoration: none;
+      border-bottom: .5px solid var(--ember2); padding-bottom: 1px;
+      transition: opacity .2s;
+    }
+    .nav-enter:hover { opacity: .65; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      background: #C5BBB0;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 0 6vw 18vh;
+      position: relative; overflow: hidden;
+    }
+    .hero-ambient {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 72% 32%, rgba(168,60,28,.13) 0%, transparent 52%),
+        radial-gradient(ellipse at 12% 80%, rgba(200,168,130,.2) 0%, transparent 42%);
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 820px; }
+    .hero-eyebrow {
+      font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
+      color: rgba(28,26,22,.5); margin-bottom: 36px; display: block;
+    }
+    .hero-name {
+      font-family: var(--serif);
+      font-size: clamp(90px, 16vw, 180px);
+      font-weight: 300; line-height: .9; letter-spacing: -.03em;
+      color: var(--ink); margin-bottom: 10px;
+    }
+    .hero-name .o { color: var(--ember2); }
+    .hero-subline {
+      font-family: var(--serif); font-style: italic; font-size: 24px;
+      color: rgba(28,26,22,.55); margin-bottom: 36px; line-height: 1.45;
+    }
+    .hero-rule { width: 48px; height: 1px; background: var(--ember2); margin-bottom: 28px; }
+    .hero-quote {
+      font-family: var(--serif); font-style: italic; font-size: clamp(28px, 4vw, 52px);
+      color: var(--ink2); max-width: 640px; line-height: 1.5; margin-bottom: 48px;
+    }
+    .hero-buttons { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    .btn-ghost {
+      font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--ink); border: .5px solid rgba(28,26,22,.3);
+      padding: 13px 26px; text-decoration: none; background: transparent;
+      cursor: pointer; transition: border-color .25s, background .25s; display: inline-block;
+    }
+    .btn-ghost:hover { border-color: rgba(28,26,22,.6); background: rgba(28,26,22,.05); }
+    .btn-ember {
+      font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--sand); background: var(--ember);
+      border: .5px solid var(--ember); padding: 13px 26px;
+      text-decoration: none; cursor: pointer; transition: background .2s; display: inline-block;
+    }
+    .btn-ember:hover { background: var(--ember2); border-color: var(--ember2); }
+
+    /* UTILITIES */
+    .sec-label {
+      font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--stone); display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
+    }
+    .sec-label::after { content: ""; width: 32px; height: .5px; background: var(--stone); opacity: .5; }
+    .sec-h {
+      font-family: var(--serif); font-size: clamp(32px,4.5vw,56px);
+      font-weight: 300; line-height: 1.05; letter-spacing: -.02em;
+      color: var(--ink); margin-bottom: 28px;
+    }
+    .sec-h em { font-style: italic; color: var(--ember); }
+
+    /* STORY */
+    .story { background: var(--sand2); padding: 120px 6vw; }
+    .story-grid { display: grid; grid-template-columns: 320px 1fr; gap: 72px; align-items: start; }
+    .story-inner { }
+    .story-photo-col { display: flex; flex-direction: column; align-items: center; padding-top: 0; }
+    .story-photo-wrap { width: 100%; position: relative; background: var(--sand3); overflow: hidden; }
+    .story-photo-wrap img.main-photo {
+      width: 100%; height: auto; display: block;
+      object-fit: cover; object-position: center center;
+      filter: sepia(6%) contrast(1.03) brightness(0.98);
+    }
+    .story-photo-caption {
+      display: block; margin-top: 10px;
+      font-size: 9px; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--stone); text-align: center;
+    }
+    .story-p {
+      font-family: var(--serif); font-style: italic;
+      font-size: clamp(16px,1.8vw,20px); font-weight: 300;
+      color: var(--ink2); line-height: 1.85;
+      margin-bottom: 24px;
+      text-align: justify; hyphens: auto; -webkit-hyphens: auto;
+    }
+    .story-p strong { font-style: normal; font-weight: 400; color: var(--ink); }
+    .story-rule { width: 48px; height: .5px; background: var(--warm); margin: 52px 0; }
+    .story-from {
+      background: var(--sand3);
+      padding: 80px 6vw;
+      border-top: .5px solid rgba(122,44,18,.15);
+    }
+    .story-from-label {
+      font-size: clamp(11px, 1.2vw, 14px); letter-spacing: .28em; text-transform: uppercase;
+      color: var(--ember2); margin-bottom: 40px; display: block;
+    }
+    .story-from-text {
+      max-width: 760px; margin: 0 auto;
+      font-family: var(--serif); font-style: italic;
+      font-size: clamp(17px, 1.9vw, 22px); font-weight: 300;
+      color: var(--ink2); line-height: 1.85;
+      text-align: justify; hyphens: auto; -webkit-hyphens: auto;
+    }
+    .story-from-text p { margin-bottom: 1.4em; }
+    .story-from-text p:last-child {
+      margin-bottom: 0;
+      color: var(--ember); font-size: clamp(17px, 1.9vw, 22px);
+    }
+    .story-breakout {
+      width: 100%; padding: 80px 6vw;
+      border-top: .5px solid rgba(122,44,18,.15);
+    }
+    .story-breakout-quote {
+      font-family: var(--serif); font-style: italic;
+      font-size: clamp(18px, 2.4vw, 28px);
+      color: var(--ink2); line-height: 1.35;
+      max-width: 900px; margin: 0 auto;
+      text-align: center; font-weight: 300;
+    }
+    .story-breakout-attr {
+      font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--stone); opacity: .6;
+      text-align: center; margin-top: 28px;
+    }
+    .story-breakout--closing {
+      background: var(--sand3);
+      border-top: .5px solid rgba(122,44,18,.2);
+      border-bottom: .5px solid rgba(122,44,18,.2);
+    }
+    .story-breakout-closing {
+      font-family: var(--serif); font-style: italic;
+      font-size: clamp(18px, 2.4vw, 28px);
+      color: var(--ember); line-height: 1.5;
+      max-width: 100%; margin: 0 auto;
+      text-align: center; font-weight: 300;
+    }
+    .story-breakout-closing .line1 {
+      display: block; white-space: nowrap;
+      font-size: clamp(18px, 2.4vw, 28px);
+    }
+    .story-breakout-closing .line2 {
+      display: block;
+      font-size: clamp(18px, 2.4vw, 28px);
+      margin-top: 0.4em;
+    }
+    .story-quote {
+      font-family: var(--serif); font-style: italic;
+      font-size: clamp(14px,1.5vw,17px);
+      color: var(--stone); line-height: 1.75;
+      border-left: 2px solid rgba(168,60,28,.3);
+      padding-left: 24px; margin-bottom: 12px;
+    }
+    .story-quote-attr {
+      font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--stone); opacity: .6; padding-left: 24px;
+    }
+    .story-closing {
+      font-family: var(--serif); font-style: italic;
+      font-size: clamp(22px,3.5vw,44px);
+      color: var(--ember); line-height: 1.35;
+      padding: 56px 6vw; margin: 60px -6vw 0;
+      border-top: .5px solid rgba(122,44,18,.2);
+      border-bottom: .5px solid rgba(122,44,18,.2);
+      font-weight: 300;
+    }
+
+    /* TERRITORY */
+    .territory { background: var(--sand); padding: 120px 6vw; }
+    .territory-intro { max-width: 640px; margin-bottom: 80px; }
+    .territory-intro p {
+      font-family: var(--serif); font-style: italic;
+      font-size: clamp(16px,1.8vw,20px); color: var(--ink2); line-height: 1.8;
+    }
+
+    /* LAB */
+    .lab-block { margin-bottom: 80px; }
+    .lab-header {
+      display: flex; align-items: baseline; gap: 20px;
+      border-bottom: .5px solid var(--line); padding-bottom: 20px; margin-bottom: 48px;
+    }
+    .lab-title {
+      font-family: var(--serif); font-size: clamp(28px,4vw,48px);
+      font-weight: 300; letter-spacing: -.02em; color: var(--ink);
+    }
+    .lab-title em { font-style: italic; color: var(--ember); }
+    .lab-sub {
+      font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--stone); padding-bottom: 2px;
+    }
+
+    .doors-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+    .door {
+      background: var(--sand2);
+      border-top: 2px solid transparent;
+      padding: 48px 40px;
+      position: relative; overflow: hidden;
+      transition: border-color .4s, background .3s;
+      display: flex; flex-direction: column;
+    }
+    .door:hover { background: var(--sand3); border-color: var(--ember2); }
+    .door-number {
+      font-family: var(--serif); font-size: 80px; font-weight: 300;
+      color: rgba(28,26,22,.05);
+      position: absolute; top: 16px; right: 24px; line-height: 1;
+    }
+    .door-tag {
+      font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+      color: var(--ember2); margin-bottom: 20px; display: block;
+    }
+    .door-title {
+      font-family: var(--serif); font-style: italic;
+      font-size: clamp(17px,1.8vw,22px); font-weight: 300;
+      color: var(--ink); line-height: 1.35; margin-bottom: 28px;
+      text-align: justify; hyphens: auto; -webkit-hyphens: auto;
+    }
+    .door-body { font-size: 14px; line-height: 1.85; color: var(--stone); text-align: justify; hyphens: auto; -webkit-hyphens: auto; flex: 1; }
+    .door-body p { margin-bottom: 14px; }
+    .door-body strong { color: var(--ink2); font-weight: 400; }
+    .door-close {
+      margin-top: 32px;
+      font-family: var(--serif); font-style: italic;
+      font-size: 16px; color: var(--ember);
+    }
+    .door-buttons {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    /* THE RETURN */
+    .return-block {
+      margin-top: 80px;
+      border-top: .5px solid var(--line);
+      padding-top: 80px;
+    }
+    .return-header {
+      display: flex; align-items: baseline; gap: 20px;
+      border-bottom: .5px solid var(--line); padding-bottom: 20px; margin-bottom: 52px;
+    }
+    .return-grid {
+      display: grid; grid-template-columns: 1fr 320px; gap: 80px; align-items: start;
+    }
+    .return-p {
+      font-family: var(--serif); font-style: italic;
+      font-size: clamp(16px,1.8vw,20px); font-weight: 300;
+      color: var(--ink2); line-height: 1.85; margin-bottom: 24px;
+      text-align: justify; hyphens: auto; -webkit-hyphens: auto;
+    }
+    .return-p strong { font-style: normal; font-weight: 400; color: var(--ink); }
+    .return-aside { padding-top: 8px; }
+    .aside-label {
+      font-size: 9px; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--stone); margin-bottom: 18px; display: block;
+    }
+    .spec-row {
+      display: flex; align-items: baseline; gap: 16px;
+      padding: 12px 0; border-bottom: .5px solid rgba(28,26,22,.06);
+    }
+    .spec-l {
+      font-size: 9px; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--stone); min-width: 80px;
+    }
+    .spec-v { font-size: 13px; font-weight: 300; color: var(--ink2); }
+    .return-cta-note {
+      font-family: var(--serif); font-style: italic;
+      font-size: 15px; color: var(--stone); line-height: 1.6;
+      margin-top: 28px;
+    }
+
+    /* ABSOLUTE BEGINNERS */
+    .beginners { background: var(--sand2); padding: 120px 6vw; }
+    .beginners-inner { max-width: 1100px; margin: 0 auto; }
+    .beginners-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 2px; margin-top: 52px;
+    }
+    .testimonial {
+      background: var(--sand); padding: 48px 36px;
+      border-top: 2px solid transparent;
+      transition: border-color .4s;
+    }
+    .testimonial:hover { border-color: var(--ember2); }
+    .testimonial-quote {
+      font-family: var(--serif); font-style: italic;
+      font-size: clamp(15px,1.4vw,18px); font-weight: 300;
+      color: var(--ink2); line-height: 1.75;
+      text-align: justify; hyphens: auto; -webkit-hyphens: auto;
+    }
+    .testimonial-name {
+      margin-top: 28px;
+      font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--ember2);
+    }
+
+    @media (max-width: 900px) {
+      .beginners-grid { grid-template-columns: 1fr; }
+    }
+    .closing {
+      background: var(--sand3); text-align: center;
+      padding: 100px 6vw;
+    }
+    .closing h2 {
+      font-family: var(--serif); font-style: italic;
+      font-size: clamp(28px,4vw,52px); font-weight: 300;
+      color: var(--ember); margin-bottom: 28px; line-height: 1.1;
+    }
+    .closing-links {
+      display: flex; align-items: center; justify-content: center;
+      flex-wrap: wrap; gap: 8px 16px;
+      font-size: 13px; letter-spacing: .06em; color: var(--stone);
+      margin-bottom: 36px;
+    }
+    .closing-link-item {
+      color: var(--stone); text-decoration: none; transition: color .2s;
+    }
+    .closing-link-item:hover { color: var(--ink); }
+    .closing-instagram { display: inline-flex; align-items: center; gap: 6px; }
+    .closing-sep { color: var(--stone); opacity: .4; }
+    .closing-soon em { font-style: italic; opacity: .6; font-size: 11px; }
+
+    /* FOOTER */
+    footer {
+      background: var(--sand3); padding: 28px 6vw;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 16px; flex-wrap: wrap;
+      border-top: .5px solid rgba(122,44,18,.15);
+    }
+    .footer-logo-wrap { display: flex; align-items: center; }
+    .footer-logo-img { height: 36px; width: auto; opacity: .85; }
+    footer span, footer a {
+      font-size: 11px; letter-spacing: .08em;
+      color: var(--stone); text-decoration: none; transition: color .2s;
+    }
+    .footer-o { color: var(--ember2); }
+    footer a:hover { color: var(--ink); }
+
+    /* FREE TERRITORY */
+    .free-territory {
+      background: var(--sand2); padding: 100px 6vw;
+      text-align: center;
+      border-top: .5px solid rgba(122,44,18,.15);
+    }
+    .ft-inner { max-width: 600px; margin: 0 auto; }
+    .ft-label {
+      font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+      color: var(--ember2); margin-bottom: 24px; display: block;
+    }
+    .ft-title {
+      font-family: var(--serif); font-style: italic; font-weight: 300;
+      font-size: clamp(32px, 5vw, 60px); color: var(--ink);
+      line-height: 1.1; margin-bottom: 24px;
+    }
+    .ft-desc {
+      font-family: var(--serif); font-style: italic;
+      font-size: clamp(16px, 2vw, 20px); color: var(--stone);
+      line-height: 1.8; margin-bottom: 48px;
+    }
+    .ft-fields {
+      display: flex; flex-direction: column; gap: 12px;
+      align-items: center;
+    }
+    .ft-input {
+      width: 100%; max-width: 380px;
+      background: var(--sand); border: 1px solid rgba(122,44,18,.25);
+      border-radius: 2px; padding: 14px 18px;
+      font-family: var(--sans); font-size: 14px; color: var(--ink);
+      outline: none; transition: border-color .2s;
+    }
+    .ft-input::placeholder { color: var(--stone); opacity: .6; }
+    .ft-input:focus { border-color: var(--ember2); }
+    .ft-success p {
+      font-family: var(--serif); font-style: italic;
+      font-size: 20px; color: var(--ember2);
+    }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .8s ease, transform .8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 768px) {
+      .story-grid { grid-template-columns: 1fr; }
+      .story-photo-wrap { max-width: 280px; margin: 0 auto; }
+      .doors-grid { grid-template-columns: 1fr; }
+      .return-grid { grid-template-columns: 1fr; }
+      .door { padding: 36px 24px; }
+      .story-closing { padding: 40px 6vw; }
+      .lab-header { flex-direction: column; gap: 8px; }
+      .return-header { flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="nav">
+    <a href="#" class="nav-logo">Acting as Transformation</a>
+    <ul class="nav-links">
+      <li><a href="#story">Story</a></li>
+      <li><a href="#territory">Territory</a></li>
+      <li><a href="#free-territory">Free Territory</a></li>
+      <li><a href="#contact" class="nav-enter">Begin here</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-ambient"></div>
+    <div class="hero-content">
+      <h1 class="hero-name">Sofia Fr<span class="o">ö</span>es</h1>
+      <div class="hero-rule"></div>
+      <p class="hero-quote">Stop acting. Start being.</p>
+      <div class="hero-buttons">
+        <a href="#story" class="btn-ember">Begin here →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section class="story" id="story">
+    <div class="story-grid">
+      <div class="story-photo-col reveal">
+        <div class="story-photo-wrap">
+          <img src="foto_site.png" alt="Sofia Fröes" class="main-photo" />
+        </div>
+      </div>
+      <div class="story-inner">
+        <p class="sec-label reveal">Story</p>
+
+        <p class="story-p reveal">Most people don't know what they've lost.<br>They think the performance is who they are.</p>
+        <p class="story-p reveal">Sofia Fröes sees what's underneath.</p>
+        <p class="story-p reveal">
+          Trained as an actress at <strong>Escola Superior de Teatro e Cinema</strong>,
+          with <strong>30+ years of embodied practice</strong> – theatre, cinema, television,
+          voice, movement, meditation, holotropic breathwork, active listening, silence –
+          she developed something that can't be taught in a course.
+          A way of seeing. Of listening. Of knowing where the conditioning lives in a body.
+        </p>
+        <p class="story-p reveal">
+          In her work, text, voice, and body are not the destination.<br>
+          <strong>They are the way in.</strong>
+        </p>
+        <p class="story-p reveal">
+          She doesn't tell you who you are. She goes there with you.
+        </p>
+        <p class="story-p reveal" style="text-align:justify;">
+          This is not acting class. Not coaching. Not therapy.<br>
+          It is a return to your own freedom of expression – which is a return to yourself.
+        </p>
+
+        <div class="story-rule reveal"></div>
+      </div>
+    </div>
+
+
+
+    <div class="story-from reveal">
+      <p class="story-from-label">From Sofia</p>
+      <div class="story-from-text">
+        <p>From an early age, I have seen beyond what is visible. Not just who someone appears to be in a given moment. But what remains untouched beneath it all.</p>
+        <p>The part hidden beneath the layers life asks us to wear. The masks. The roles we learn to play. The protections we build. The fears we carry. The stories we tell ourselves in order to survive.</p>
+        <p>I have always seen beyond those things. I see the essence. The strength. The voice before it is heard. The potential before it takes shape. The possibility that still exists, even when the person themselves can no longer see it.</p>
+        <p>Perhaps that is why people often tell me I see the world differently. Not because I am blind to pain. Or loss. Or the scars life leaves behind. I see them all. But I also see what none of those things could erase.</p>
+        <p>The part that remains. Quietly waiting. Ready to reveal itself.</p>
+      </div>
+    </div>
+
+    <div class="story-breakout reveal">
+      <blockquote class="story-breakout-quote">
+        "You are not a voice teacher. To describe you that way is too reductive.
+        You accompany processes of liberation – through voice, through body, through presence.
+        What you do is return to each person their freedom of expression.
+        And that is everything."
+      </blockquote>
+      <p class="story-breakout-attr">– Carla</p>
+    </div>
+
+    <div class="story-breakout story-breakout--closing reveal">
+      <p class="story-breakout-closing">
+        <span class="line1">There is a version of you that existed before you started performing.</span>
+        <span class="line2">Before the roles. Before the masks you learned to wear so well you forgot they were masks.</span>
+      </p>
+    </div>
+
+  </section>
+
+  <!-- TERRITORY -->
+  <section class="territory" id="territory">
+
+    <div class="territory-intro reveal">
+      <p class="sec-label">Territory</p>
+      <h2 class="sec-h">Acting as <em>Transformation</em></h2>
+    </div>
+
+    <!-- LAB -->
+    <div class="lab-block">
+      <div class="lab-header reveal">
+        <h3 class="lab-title">The <em>Lab</em></h3>
+        <span class="lab-sub">In-person · Full day</span>
+      </div>
+
+      <div class="doors-grid">
+        <div class="door reveal">
+          <span class="door-tag">On Stage</span>
+          <h4 class="door-title">You know your text.<br>You've prepared everything.<br>And then you walk into the room – and you're gone.</h4>
+          <div class="door-body">
+            <p>Not because you're not good enough.<br>Because you're not there.</p>
+            <p>The audition is not won by who prepared the most.<br>
+            It's won by <strong>who is most alive in the room.</strong></p>
+            <p>Presence. Listening. Letting go of control without losing the ground.
+            Being in the scene instead of watching yourself perform it.</p>
+            <p>Active listening. Text that becomes yours. Body available. Voice free.</p>
+            <p>You don't need to be more.<br>You need to be here.</p>
+          </div>
+          <p class="door-close">Live it. Don't perform it.</p>
+          <div class="door-buttons">
+            <a href="lab.html" class="btn-ghost">Next Labs</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeqagexSs4fUqSzjBuH31pORT4_VJbUh25vJS1wk5U4DObIGQ/viewform?usp=header" class="btn-ember">Apply now</a>
+          </div>
+        </div>
+
+        <div class="door reveal">
+          <span class="door-tag">Off Stage</span>
+          <h4 class="door-title">You don't think of yourself as a performer. But you know the feeling.</h4>
+          <div class="door-body">
+            <p>The moment before you speak in a meeting and your mind goes blank.
+            The presentation where you knew everything – and your body forgot.
+            The conversation where you wanted to say something real – and something rehearsed came out instead.</p>
+            <p>It's not nerves.<br><strong>It's disconnection.</strong><br>Head in one place. Body in another.</p>
+            <p>Voice. Breath. Body. Presence.<br>
+            Not as techniques to learn – as things you already have and stopped trusting.</p>
+            <p>You don't need to perform better.<br>You need to stop performing altogether.</p>
+          </div>
+          <p class="door-close">Come as you are.</p>
+          <div class="door-buttons">
+            <a href="lab.html" class="btn-ghost">Next Labs</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeqagexSs4fUqSzjBuH31pORT4_VJbUh25vJS1wk5U4DObIGQ/viewform?usp=header" class="btn-ember">Apply now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THE RETURN -->
+    <div class="return-block">
+      <div class="return-header reveal">
+        <h3 class="lab-title">The <em>Return</em></h3>
+        <span class="lab-sub">1:1 · 3 months · Online</span>
+      </div>
+
+      <div class="return-grid">
+        <div>
+          <p class="return-p reveal">
+            There are moments in life when something needs to change – but it has no name yet.
+            Moments of pressure, of visibility, of deep transition. Moments when the person you were
+            is no longer enough, and the person you are becoming has not yet fully arrived.
+          </p>
+          <p class="return-p reveal">
+            The Return is a 1:1 process – discreet, deeply individual, built around who you are
+            and what you are moving through. It is not therapy. It is not coaching.
+            It is a creative and human process, led by someone who sees beyond what is visible –
+            and who knows how to hold the space for what needs to emerge.
+          </p>
+          <p class="return-p reveal">
+            The process honours who you are, your path, your history.
+            There is no script – only listening, presence, and movement towards
+            what already exists within you.
+          </p>
+          <p class="return-p reveal" style="font-style:normal; font-size:14px; color:var(--stone);">
+            If you feel this process is for you, write.<br>
+            A conversation commits to nothing – but it may change everything.
+          </p>
+          <p class="door-close reveal">Something in you already knows.</p>
+          <div style="margin-top:28px;" class="reveal">
+            <a href="mailto:sofiafroeslab@gmail.com" class="btn-ember">Write to Sofia</a>
+          </div>
+        </div>
+
+        <div class="return-aside reveal">
+          <span class="aside-label">Details</span>
+          <div class="spec-row">
+            <span class="spec-l">Duration</span>
+            <span class="spec-v">3 months</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-l">Rhythm</span>
+            <span class="spec-v">Weekly 2-hour sessions</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-l">Format</span>
+            <span class="spec-v">Online</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-l">Access</span>
+            <span class="spec-v">By selection · Limited places</span>
+          </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ABSOLUTE BEGINNERS -->
+  <section class="beginners" id="beginners">
+    <div class="beginners-inner">
+      <p class="sec-label reveal">Absolute Beginners</p>
+      <h2 class="sec-h reveal">Those who <em>showed up</em></h2>
+
+      <div class="beginners-grid">
+
+        <div class="testimonial reveal">
+          <blockquote class="testimonial-quote">
+            "Sofia has a rare quality of listening. She understands who you are and where you are. And takes you somewhere you never thought you could reach. I did things I had only ever dreamt of before."
+          </blockquote>
+          <p class="testimonial-name">– Lara</p>
+        </div>
+
+        <div class="testimonial reveal">
+          <blockquote class="testimonial-quote">
+            "Returning to myself. That is what I felt. A reunion with my own truth. This mentorship achieved more than years of technical training ever had."
+          </blockquote>
+          <p class="testimonial-name">– James</p>
+        </div>
+
+        <div class="testimonial reveal">
+          <blockquote class="testimonial-quote">
+            "If there is one thing that defines what Sofia does – it is returning to each person the freedom of expression. This may sound like a small thing the first time you hear it. But to return to someone the freedom of expression is to return to them the possibility of truly being themselves – fully and without condition. And that is a beauty without end."
+          </blockquote>
+          <p class="testimonial-name">– Carla</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FREE TERRITORY -->
+  <section class="free-territory" id="free-territory">
+    <div class="ft-inner">
+      <div class="ft-label reveal">Free Territory</div>
+      <h2 class="ft-title reveal">The First Return</h2>
+      <p class="ft-desc reveal">A 7-minute guided audio practice.<br>A PDF to carry with you.<br>A first step back to yourself – free.</p>
+      <div class="ft-form reveal">
+        <!-- MailerLite embed – campos limpos com CSS do site -->
+        <form class="ft-ml-form" action="https://assets.mailerlite.com/jsonp/2443992/forms/190276865226704007/subscribe" data-code="" method="post" target="_blank">
+          <div class="ft-fields">
+            <input aria-label="name" aria-required="true" type="text" name="fields[name]" placeholder="Your name" autocomplete="given-name" class="ft-input">
+            <input aria-label="email" aria-required="true" type="email" name="fields[email]" placeholder="Your email" autocomplete="email" class="ft-input">
+            <button type="submit" class="btn-ember">Receive now – it's free</button>
+          </div>
+          <input type="hidden" name="ml-submit" value="1">
+          <input type="hidden" name="anticsrf" value="true">
+        </form>
+        <div class="ft-success" style="display:none;">
+          <p>It's on its way. Check your inbox.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="closing" id="contact">
+    <h2>The door is open.</h2>
+    <div class="closing-links">
+      <a href="mailto:sofiafroeslab@gmail.com" class="closing-link-item">sofiafroeslab@gmail.com</a>
+      <span class="closing-sep">·</span>
+      <a href="https://www.instagram.com/iamsofiafroes" target="_blank" class="closing-link-item closing-instagram">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        @iamsofiafroes
+      </a>
+      <span class="closing-sep">·</span>
+      <span class="closing-link-item closing-soon">The Listening Room <em>– em breve</em></span>
+    </div>
+    <a href="mailto:sofiafroeslab@gmail.com" class="btn-ember">Begin here</a>
+  </section>
+
+  <footer>
+    <span>© 2026 Sofia Fr<span class="footer-o">ö</span>es · Acting as Transformation · All rights reserved</span>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+  <script src="https://groot.mailerlite.com/js/w/webforms.min.js?v83147fa8ce2d95cb73ece7f28b469519" type="text/javascript"></script>
+  <script>
+    fetch("https://assets.mailerlite.com/jsonp/2443992/forms/190276865226704007/takel");
+    // Free Territory success
+    document.querySelector('.ft-ml-form').addEventListener('submit', function() {
+      setTimeout(function() {
+        document.querySelector('.ft-form').style.display = 'none';
+        document.querySelector('.ft-success').style.display = 'block';
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
